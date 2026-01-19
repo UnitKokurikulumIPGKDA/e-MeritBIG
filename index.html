@@ -3,259 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem e-BIG IPGKDA</title>
+    <title>Portal e-BIG IPGKDA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #334155; }
-        .glass-panel { background: rgba(255, 255, 255, 0.98); border-radius: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #1e293b; }
+        .glass-panel { background: rgba(255, 255, 255, 0.98); border-radius: 2rem; border: 1px solid #e2e8f0; }
+        .input-custom { border: 2px solid #e2e8f0; border-radius: 1rem; padding: 12px; text-align: center; font-weight: 800; width: 100%; outline: none; transition: 0.2s; }
+        .input-custom:focus { border-color: #4f46e5; background: #f5f3ff; }
+        .tab-active { background: #4f46e5; color: white; box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3); }
         .hidden { display: none !important; }
-        .input-compact { border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; font-weight: 800; text-align: center; width: 100%; transition: 0.2s; }
-        .input-compact:focus { border-color: #6366f1; outline: none; box-shadow: 0 0 0 4px rgba(99,102,241,0.1); }
-        .tab-btn { padding: 12px; border-radius: 14px; font-weight: 700; font-size: 11px; text-transform: uppercase; transition: 0.2s; }
-        .tab-active { background: #4338ca; color: white; box-shadow: 0 4px 12px rgba(67, 56, 202, 0.2); }
-        .tab-inactive { background: #f1f5f9; color: #94a3b8; }
-        .badge-hp { background: #eef2ff; color: #4338ca; padding: 4px 10px; border-radius: 10px; font-weight: 800; }
     </style>
 </head>
 <body class="min-h-screen p-4 flex flex-col items-center">
 
-    <div id="loader" class="fixed inset-0 bg-white/70 z-[100] hidden flex flex-col items-center justify-center">
+    <div id="loader" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-[100] hidden flex flex-col items-center justify-center">
         <div class="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-        <p class="mt-4 font-black text-xs uppercase tracking-widest text-indigo-900">Sila Tunggu...</p>
     </div>
 
-    <div id="view-login" class="glass-panel w-full max-w-md p-10 mt-10">
+    <div id="view-login" class="glass-panel w-full max-w-md p-10 mt-10 shadow-xl">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-black text-indigo-950 tracking-tighter">e-BIG IPGKDA</h1>
-            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Portal Penilaian BIG</p>
+            <h1 class="text-3xl font-black tracking-tighter text-slate-900">e-BIG PORTAL</h1>
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">IPG KAMPUS DARUL AMAN</p>
         </div>
-        <div class="flex gap-2 mb-6 p-1.5 bg-slate-50 rounded-2xl">
-            <button onclick="switchLogin('student')" id="tab-student" class="flex-1 py-3 rounded-xl font-bold text-xs tab-active">Pelajar</button>
-            <button onclick="switchLogin('lecturer')" id="tab-lecturer" class="flex-1 py-3 rounded-xl font-bold text-xs tab-inactive">Pensyarah</button>
-        </div>
-        <form id="form-student" onsubmit="loginStudent(event)" class="space-y-4">
-            <input type="text" id="login-ic" class="w-full p-4 rounded-2xl border-2 border-slate-100 text-center font-black text-lg outline-none focus:border-indigo-500" placeholder="KAD PENGENALAN" required>
-            <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black shadow-xl">LOG MASUK</button>
-        </form>
-        <form id="form-lecturer" onsubmit="loginLecturer(event)" class="space-y-4 hidden">
-            <input type="email" id="login-email" class="w-full p-4 border rounded-xl" placeholder="E-mel Rasmi">
-            <input type="password" id="login-pass" class="w-full p-4 border rounded-xl" placeholder="Kata Laluan">
-            <button class="w-full bg-slate-900 text-white py-4 rounded-xl font-black">AKSES PENSYARAH</button>
+        <form id="form-lecturer" onsubmit="loginLecturer(event)" class="space-y-4">
+            <input type="email" id="login-email" class="input-custom !text-sm" placeholder="E-mel Pensyarah" required>
+            <input type="password" id="login-pass" class="input-custom !text-sm" placeholder="Kata Laluan" required>
+            <button class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black shadow-lg">AKSES PENSYARAH</button>
         </form>
     </div>
 
-    <div id="view-lecturer" class="glass-panel w-full max-w-6xl p-8 hidden shadow-2xl">
-        <div class="flex justify-between items-center mb-10">
-            <h2 class="text-2xl font-black text-slate-900 tracking-tight uppercase">Portal Penilai</h2>
-            <button onclick="location.reload()" class="bg-rose-50 text-rose-600 px-6 py-2 rounded-xl font-black text-[10px] uppercase">Log Keluar</button>
+    <div id="view-lecturer" class="glass-panel w-full max-w-6xl p-8 hidden mt-4 shadow-2xl">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-xl font-black uppercase text-indigo-900">Panel Penilai</h2>
+            <button onclick="location.reload()" class="text-rose-600 font-black text-xs uppercase">Keluar</button>
         </div>
 
-        <div class="mb-8 p-6 bg-indigo-900 rounded-[2rem] shadow-lg">
-            <label class="text-[10px] font-black text-indigo-200 uppercase tracking-widest mb-2 block">Carian Pantas (3 Angka Terakhir Kod Pelajar)</label>
-            <div class="flex gap-2">
-                <input type="text" id="search-code" maxlength="3" oninput="searchByLastThree()" 
-                       class="flex-1 p-4 rounded-xl border-none font-black text-2xl text-center outline-none focus:ring-4 focus:ring-indigo-400" 
-                       placeholder="Contoh: 001">
-                <div class="bg-indigo-500 text-white px-6 flex items-center rounded-xl">
-                    <i class="fas fa-search text-xl"></i>
-                </div>
-            </div>
-            <p id="search-msg" class="text-[10px] font-bold text-indigo-300 mt-2 italic h-4"></p>
+        <div class="mb-8 p-6 bg-slate-900 rounded-[2rem] shadow-xl">
+            <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block">Carian Pantas (3 Angka Terakhir Kod Pelajar)</label>
+            <input type="text" id="search-code" maxlength="3" oninput="searchByLastThree()" 
+                   class="w-full p-4 rounded-xl border-none font-black text-2xl text-center outline-none bg-white" 
+                   placeholder="Contoh: 003">
+            <p id="search-msg" class="text-[11px] font-bold text-indigo-300 mt-2 italic h-4"></p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
-            <div class="space-y-4 p-6 bg-slate-50 rounded-3xl border border-slate-200">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pilihan Manual</h3>
-                <select id="sel-class" onchange="filterStudents()" class="w-full p-4 rounded-xl border-2 border-slate-100 font-black text-xs uppercase bg-white outline-none focus:border-indigo-500"></select>
-                <select id="sel-student" class="w-full p-4 rounded-xl border-2 border-slate-100 font-black text-xs uppercase bg-white outline-none focus:border-indigo-500"></select>
-                <button onclick="loadStudentDataAdmin()" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-black uppercase text-xs">Papar Borang</button>
-            </div>
-
-            <div class="bg-white rounded-3xl border border-slate-200 p-6 flex flex-col items-center justify-center h-72">
-                <h3 class="text-[9px] font-black text-slate-400 uppercase mb-4 tracking-widest">Prestasi Rakan</h3>
-                <div class="w-full h-full max-h-[180px]"><canvas id="spiderChart"></canvas></div>
-            </div>
-
-            <div class="bg-slate-100 rounded-[2.5rem] h-72 flex items-center justify-center overflow-hidden border-8 border-white shadow-inner">
-                <img id="lec-view-img" class="w-full h-full object-cover hidden">
-                <i id="img-placeholder" class="fas fa-user-circle text-7xl text-slate-300"></i>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <select id="sel-class" onchange="filterStudents()" class="p-4 rounded-xl border-2 border-slate-100 font-black text-xs uppercase"></select>
+            <select id="sel-student" class="p-4 rounded-xl border-2 border-slate-100 font-black text-xs uppercase"></select>
         </div>
+        <button onclick="loadStudentDataAdmin()" class="w-full bg-indigo-600 text-white py-4 rounded-xl font-black uppercase shadow-md mb-8">Mula Menilai</button>
 
-        <div id="grading-area" class="hidden space-y-8 animate-in slide-in-from-bottom-5 duration-500">
-            <div class="flex gap-2 p-1.5 bg-slate-100 rounded-2xl max-w-sm">
-                <button onclick="switchTab('t3')" class="flex-1 tab-btn tab-active">Amali 2 (HP3)</button>
+        <div id="grading-area" class="hidden p-8 bg-white border rounded-[2rem] shadow-sm space-y-6">
+            <div class="flex justify-between items-center border-b pb-4">
+                <h3 class="font-black text-emerald-700 text-sm uppercase">Amali 2 (Default 80%)</h3>
+                <span id="total_hp3_disp" class="bg-emerald-100 text-emerald-700 px-4 py-1 rounded-full font-black text-xs">HP3: 0/25</span>
             </div>
-
-            <div id="form-t3" class="p-8 bg-white rounded-[2.5rem] border border-slate-200 shadow-sm">
-                <div class="flex justify-between items-center mb-6 border-b pb-4">
-                    <h3 class="font-black text-emerald-700 uppercase text-sm">Kemahiran Amali (Default 80%)</h3>
-                    <span id="total_hp3_disp" class="badge-hp bg-emerald-600 text-white">HP3: 0.0 / 25</span>
-                </div>
-                <div class="grid grid-cols-5 gap-4 mb-8">
-                    <div><label class="block text-center text-[9px] font-black text-slate-400 mb-1">P1</label><input type="number" id="t3_hp3_1" class="input-compact" oninput="calcT3()"></div>
-                    <div><label class="block text-center text-[9px] font-black text-slate-400 mb-1">P2</label><input type="number" id="t3_hp3_2" class="input-compact" oninput="calcT3()"></div>
-                    <div><label class="block text-center text-[9px] font-black text-slate-400 mb-1">P3</label><input type="number" id="t3_hp3_3" class="input-compact" oninput="calcT3()"></div>
-                    <div><label class="block text-center text-[9px] font-black text-slate-400 mb-1">P4</label><input type="number" id="t3_hp3_4" class="input-compact" oninput="calcT3()"></div>
-                    <div><label class="block text-center text-[9px] font-black text-slate-400 mb-1">P5</label><input type="number" id="t3_hp3_5" class="input-compact" oninput="calcT3()"></div>
-                </div>
-                <button onclick="submitMark('MARKAH_TUGASAN3')" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black uppercase tracking-widest shadow-lg shadow-emerald-100 active:scale-95 transition-all">Simpan Markah Pelajar</button>
+            <div class="grid grid-cols-5 gap-3">
+                <input type="number" id="t3_hp3_1" class="input-custom !text-sm" oninput="calcT3()">
+                <input type="number" id="t3_hp3_2" class="input-custom !text-sm" oninput="calcT3()">
+                <input type="number" id="t3_hp3_3" class="input-custom !text-sm" oninput="calcT3()">
+                <input type="number" id="t3_hp3_4" class="input-custom !text-sm" oninput="calcT3()">
+                <input type="number" id="t3_hp3_5" class="input-custom !text-sm" oninput="calcT3()">
             </div>
+            <button onclick="submitMark('MARKAH_TUGASAN3')" class="w-full bg-emerald-600 text-white py-5 rounded-2xl font-black uppercase shadow-lg">Simpan Markah</button>
         </div>
-    </div>
-
-    <div id="view-student" class="glass-panel w-full max-w-xl p-8 hidden text-center mt-10">
-        <h2 id="std-name" class="text-2xl font-black text-slate-800 uppercase mb-2">-</h2>
-        <p id="std-info" class="text-xs font-bold text-indigo-600 mb-8 uppercase tracking-widest"></p>
-        <div class="p-6 bg-slate-50 rounded-3xl border border-slate-200 text-left">
-            <h3 class="font-black text-[10px] text-slate-400 uppercase mb-4">Maklumat Kecemasan</h3>
-            <p class="text-xs font-bold mb-2">Alahan: <span id="disp-alahan" class="text-slate-900">-</span></p>
-            <p class="text-xs font-bold">Waris: <span id="disp-tel" class="text-slate-900">-</span></p>
-        </div>
-        <button onclick="location.reload()" class="w-full mt-8 bg-slate-100 text-slate-500 py-4 rounded-2xl font-black text-xs uppercase">Log Keluar</button>
     </div>
 
     <script>
+        // GANTIKAN DENGAN URL WEB APP ANDA
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwfoqRSXpmZ9pThQSGadXr_Pidwzi0S1LLTW9-GTrVgCFc2SMmsKWo5VIoRctV2tzcr_w/exec";
-        let allStudentsCache = [], spiderChartInstance = null;
+        let allStudentsCache = [];
 
-        const showLoader = (s) => document.getElementById('loader').classList.toggle('hidden',!s);
+        const showLoader = (s) => document.getElementById('loader').classList.toggle('hidden', !s);
 
-        // --- FUNGSI CARIAN 3 ANGKA ---
         function searchByLastThree() {
             const input = document.getElementById('search-code').value.trim();
             const msg = document.getElementById('search-msg');
             
             if (input.length === 3) {
                 const student = allStudentsCache.find(s => {
-                    const code = s.id || ""; 
+                    const code = s['Kod Pelajar'] || ""; 
                     return code.toString().endsWith(input);
                 });
 
                 if (student) {
-                    msg.innerText = "Ditemui: " + student.nama;
-                    msg.className = "text-[10px] font-bold text-emerald-500 mt-2 italic";
+                    msg.innerText = "Ditemui: " + student['Nama Pelajar'];
+                    msg.className = "text-[11px] font-bold text-emerald-400 mt-2 italic";
                     
-                    document.getElementById('sel-class').value = student.kelas;
+                    document.getElementById('sel-class').value = student['Kelas'];
                     filterStudents();
-                    document.getElementById('sel-student').value = student.id;
+                    document.getElementById('sel-student').value = student['Kod Pelajar'];
                     loadStudentDataAdmin();
-                    
-                    // Reset carian selepas 3 saat
-                    setTimeout(() => { 
-                        document.getElementById('search-code').value = ""; 
-                        msg.innerText = "";
-                    }, 3000);
                 } else {
-                    msg.innerText = "Kod '" + input + "' tidak ditemui.";
-                    msg.className = "text-[10px] font-bold text-rose-500 mt-2 italic";
+                    msg.innerText = "Kod akhiran '" + input + "' tidak ditemui.";
+                    msg.className = "text-[11px] font-bold text-rose-400 mt-2 italic";
                 }
             } else { msg.innerText = ""; }
         }
 
-        // --- FUNGSI AUTO-FILL 80% ---
-        function applyDefault80() {
-            // HP3: 5 item * 4 markah = 20/25 (80%)
-            for(let i=1; i<=5; i++) {
-                document.getElementById(`t3_hp3_${i}`).value = 4;
-            }
-            calcT3();
-        }
-
-        // --- CORE LOGIC ---
-        async function loadStudentDataAdmin() {
-            const id = document.getElementById('sel-student').value; if(!id) return;
-            showLoader(true);
+        async function loginLecturer(e) {
+            e.preventDefault(); showLoader(true);
             try {
-                const r = await fetch(WEB_APP_URL, {method:"POST", body:JSON.stringify({action:"get_student_marks", student_id:id})});
+                const r = await fetch(WEB_APP_URL, {method:"POST", body:JSON.stringify({
+                    action:"login_lecturer", 
+                    email:document.getElementById('login-email').value, 
+                    password:document.getElementById('login-pass').value
+                })});
                 const res = await r.json();
-                const s = allStudentsCache.find(x => x.id == id);
-                
-                // Gambar
-                const img = document.getElementById('lec-view-img'), ph = document.getElementById('img-placeholder');
-                if(s.url_gambar) { img.src=s.url_gambar; img.classList.remove('hidden'); ph.classList.add('hidden'); } 
-                else { img.classList.add('hidden'); ph.classList.remove('hidden'); }
-
-                // Check jika markah kosong
-                const isEmpty = res.marks.t3.hp3.every(v => v == 0 || v == "");
-                if (isEmpty) {
-                    applyDefault80();
-                } else {
-                    res.marks.t3.hp3.forEach((v, i) => document.getElementById(`t3_hp3_${i+1}`).value = v);
-                    calcT3();
-                }
-
-                document.getElementById('grading-area').classList.remove('hidden');
-                renderSpiderGraph(res.peerAverages || [0,0,0,0,0]);
-            } catch(e) { alert("Ralat memuatkan data."); }
+                if(res.result==='success') {
+                    allStudentsCache = res.students_list;
+                    document.getElementById('view-login').classList.add('hidden');
+                    document.getElementById('view-lecturer').classList.remove('hidden');
+                    
+                    const classes = [...new Set(allStudentsCache.map(s => s['Kelas']))].sort();
+                    const sel = document.getElementById('sel-class');
+                    sel.innerHTML = '<option value="">Pilih Kelas</option>';
+                    classes.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
+                } else alert(res.message);
+            } catch(e) { alert("Ralat sambungan."); }
             showLoader(false);
         }
 
-        function calcT3() { 
-            let h3 = 0; for(let i=1;i<=5;i++) h3+= (parseFloat(document.getElementById(`t3_hp3_${i}`).value)||0);
-            document.getElementById('total_hp3_disp').innerText = "HP3: " + h3.toFixed(1) + " / 25";
+        function filterStudents() {
+            const c = document.getElementById('sel-class').value;
+            const sel = document.getElementById('sel-student');
+            sel.innerHTML = '<option value="">Pilih Pelajar</option>';
+            allStudentsCache.filter(s => s['Kelas'] === c).forEach(s => {
+                sel.innerHTML += `<option value="${s['Kod Pelajar']}">${s['Nama Pelajar']}</option>`;
+            });
+        }
+
+        async function loadStudentDataAdmin() {
+            const sid = document.getElementById('sel-student').value;
+            if(!sid) return;
+            showLoader(true);
+            const r = await fetch(WEB_APP_URL, {method:"POST", body:JSON.stringify({action:"get_student_marks", student_id:sid})});
+            const res = await r.json();
+            
+            // Apply 80% default (4.0 markah setiap item) jika kosong
+            const marks = res.marks.hp3;
+            if (marks.every(v => v == 0 || v == "")) {
+                for(let i=1; i<=5; i++) document.getElementById(`t3_hp3_${i}`).value = 4;
+            } else {
+                marks.forEach((v, i) => document.getElementById(`t3_hp3_${i+1}`).value = v);
+            }
+            calcT3();
+            document.getElementById('grading-area').classList.remove('hidden');
+            showLoader(false);
+        }
+
+        function calcT3() {
+            let total = 0;
+            for(let i=1; i<=5; i++) total += parseFloat(document.getElementById(`t3_hp3_${i}`).value || 0);
+            document.getElementById('total_hp3_disp').innerText = "HP3: " + total.toFixed(1) + "/25";
         }
 
         async function submitMark(sn) {
             const sid = document.getElementById('sel-student').value;
             let p = { action: "save_mark", sheet_name: sn, student_id: sid };
-            for(let i=1;i<=5;i++) p[`hp3_${i}`] = document.getElementById(`t3_hp3_${i}`).value;
+            for(let i=1; i<=5; i++) p[`hp3_${i}`] = document.getElementById(`t3_hp3_${i}`).value;
             showLoader(true);
             const r = await fetch(WEB_APP_URL, {method:"POST", body:JSON.stringify(p)});
-            const res = await r.json(); alert(res.message); showLoader(false);
-        }
-
-        // --- AUTH ---
-        async function loginStudent(e) {
-            e.preventDefault(); showLoader(true);
-            const r = await fetch(WEB_APP_URL, {method:"POST", body:JSON.stringify({action:"login_student", no_kp:document.getElementById('login-ic').value})});
             const res = await r.json();
-            if(res.result==='success') {
-                const s = res.data;
-                document.getElementById('view-login').classList.add('hidden');
-                document.getElementById('view-student').classList.remove('hidden');
-                document.getElementById('std-name').innerText = s.nama;
-                document.getElementById('std-info').innerText = `Kelas: ${s.kelas} | Kump: ${s.kumpulan}`;
-                document.getElementById('disp-alahan').innerText = s.alahan || "Tiada";
-                document.getElementById('disp-tel').innerText = s.tel_kecemasan || "-";
-            } else alert(res.message);
+            alert(res.message);
             showLoader(false);
-        }
-
-        async function loginLecturer(e) {
-            e.preventDefault(); showLoader(true);
-            const r = await fetch(WEB_APP_URL, {method:"POST", body:JSON.stringify({action:"login_lecturer", email:document.getElementById('login-email').value, password:document.getElementById('login-pass').value})});
-            const res = await r.json();
-            if(res.result==='success') {
-                allStudentsCache = res.students_list;
-                document.getElementById('view-login').classList.add('hidden');
-                document.getElementById('view-lecturer').classList.remove('hidden');
-                const cl = [...new Set(allStudentsCache.map(s => s.kelas))].sort();
-                const sel = document.getElementById('sel-class'); sel.innerHTML = '<option value="">Pilih Kelas</option>';
-                cl.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
-            } else alert(res.message);
-            showLoader(false);
-        }
-
-        function filterStudents() { 
-            const c = document.getElementById('sel-class').value; 
-            const sel = document.getElementById('sel-student'); sel.innerHTML = '<option value="">Pilih Pelajar</option>'; 
-            allStudentsCache.filter(s => s.kelas === c).sort((a,b)=>a.nama.localeCompare(b.nama)).forEach(s => sel.innerHTML += `<option value="${s.id}">${s.nama}</option>`); 
-        }
-
-        function renderSpiderGraph(dataPoints) {
-            const ctx = document.getElementById('spiderChart').getContext('2d'); if(spiderChartInstance) spiderChartInstance.destroy();
-            spiderChartInstance = new Chart(ctx, { type: 'radar', data: { labels: ['Pimpin', 'Kerjasama', 'Komunikasi', 'Komitmen', 'Sahsiah'], datasets: [{ data: dataPoints, backgroundColor: 'rgba(99, 102, 241, 0.2)', borderColor: '#6366f1', borderWidth: 2 }] }, options: { scales: { r: { min: 0, max: 5, ticks: { display: false } } }, plugins: { legend: { display: false } } } });
-        }
-
-        function switchLogin(r) {
-            document.getElementById('form-student').classList.toggle('hidden', r!=='student');
-            document.getElementById('form-lecturer').classList.toggle('hidden', r!=='lecturer');
-            document.getElementById('tab-student').className = r==='student'?'flex-1 py-3 rounded-xl font-bold text-xs tab-active':'flex-1 py-3 rounded-xl font-bold text-xs tab-inactive';
-            document.getElementById('tab-lecturer').className = r==='lecturer'?'flex-1 py-3 rounded-xl font-bold text-xs tab-active':'flex-1 py-3 rounded-xl font-bold text-xs tab-inactive';
         }
     </script>
 </body>
